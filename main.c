@@ -21,13 +21,15 @@ int main(int argc, const char * argv[]) {
 	long numOfSeconds;
 	int seconds = scanf("%ld", &numOfSeconds);
 	
+	
+
 	if (seconds == EOF) {
-		// ERROR
+		return 1;
 	}
 	// User inputs a collection of numbers
 	int i=0, j=0;
 	// max amount of numbers is declared with 100
-	int arr[10];
+	int arr[100];
 	char temp;
 	int counter = 0;
 	printf("Vnesi zbirko stevil: \n");
@@ -47,7 +49,7 @@ int main(int argc, const char * argv[]) {
 		printf("%d ", arr[j]);
 	}
 	printf("\n");
-	printf("Vneseno celo stevilo za iskanje je: %d. \n", additionalNum );
+	printf("Vneseno celo število za iskanje je: %d. \n", additionalNum );
 	
 	// fork() returns twice. For child and parent process.
 	int otrok = fork();
@@ -72,13 +74,18 @@ int main(int argc, const char * argv[]) {
 		long min = seconds / 60;
 		seconds -= min * 60;
 		// Formated output to user of how many days, hours, minutes and seconds is in seconds that the user entered.
-		printf("%lds se lahko zapise kot: %ld days %ldd h: %ld min: %lds\n",numOfSeconds,days, hours, min, seconds);
+		printf("%lds se lahko zapise kot: %lddni %ldh: %ld min: %lds\n",numOfSeconds,days, hours, min, seconds);
 	}else{
 		// Code in else statment is executed by a parent process.
 		printf("--------------PARENT-----------------\n");
+		int smallest = arr[0];
 		int counter = 0;
 		int suma = 0;
-		for(int i = 0; i < sizeof(&arr)+1; i++){
+		for(int i = 0; i < sizeof(&arr); i++){
+	
+			if(arr[i] < smallest){
+				smallest = arr[i];
+			}
 			printf("%d ", arr[i]);
 			suma = suma + arr[i];
 			if(arr[i] == additionalNum){
@@ -86,11 +93,19 @@ int main(int argc, const char * argv[]) {
 			}
 		}
 		if(counter != 0){
-			printf("\nDodatna stevilka %d za iskanje se pojavi %d-krat.",additionalNum, counter);
+			printf("\nDodatna stevilka %d za iskanje se pojavi %d-krat. \n",additionalNum, counter);
 		}else{
-			printf("\nDodatna stevilka %d za iskanje se ne pojavi v zaporedju!", additionalNum);
+			printf("\nDodatna stevilka %d za iskanje se ne pojavi v zaporedju! \n", additionalNum);
 		}
-		printf("\nSestevek vseh vnesenih stevil je %d.", suma);
+		printf("Seštevek vseh številk v zbirki je: %d \n", suma);
+		printf("Najmanjse stevilo v skupini je: %d\n", smallest);
+
 	}
+	FILE *fp;
+	fp = fopen("output.txt", "w");
+	
+	fprintf(fp, "I love cheese.");
+	fflush(fp);
+	fclose(fp);
 	return 0;
 }
